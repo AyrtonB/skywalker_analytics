@@ -1,0 +1,199 @@
+{% block content %}
+<div class="container">
+	<h3 class="red_txt bold_txt">About the Project</h3>
+
+	<p>The increase in the use renewable energy has rightly been welcomed but it brings new challenges to national and district system operators. The intermittency of resources such as wind and solar put pressure on grid balancing, meaning dispatchable generators are forced to operate below maximum efficiency in order to quickly adjust to changes in demand.</p>
+
+	<p>Demand side response (DSR) is one strategy that can aid grid balancing by reducing demand during peak periods or when renewables are forecast to be under-producing, as highlighted in the UK Government’s Smart Systems and Flexibility Plan. There are a number of approaches being taken to address the need for flexible demand, for deployment at scale the most promising of these is the adoption of Time-of-Use (ToU) tariffs. Consumers on ToU tariffs pay different unit prices for electricity depending on the cost for the utility company at the time of delivery. This in turn is dependent on over or under supply to the grid, so for example in the case of excess wind generation at night prices will drop. When consumers change their behavior in line with these price signals it is referred to as demand side response (DSR). </p>
+
+	<p>One of the issues facing utility companies in getting consumers to switch to these tariffs is identifying households that are most likely to benefit from ToU pricing and therefore more receptive to such schemes. This project uses smart meter data from a trial of London households and associated survey data as a means to identify customers with the greatest response to ToU tariffs. A number of state of the art machine learning techniques were used to model the magnitude of response to ToU and to classify customers as ‘high responders’. </p>
+
+	<br>
+
+	<h4 class="red_txt bold_txt">What Previous Research Tells Us</h4>
+
+	<p>Previous studies of response to ToU pricing have shown mixed results. In a trial carried out by British gas ToU tariffs were found to decrease weekday peak consumption by 8.7% and overall consumption by 1.5%. On the other hand a study from Northern Italy of implementing non-voluntary ToU tariffs found only a relatively modest level of load shedding, concentrated mostly in the mornings. Similarly, a study from Denmark where households are offered electric vehicle use and static ToU tariffs, finds only very modest change in load profiles (ref 19.).</p>
+
+	<p>Previous work on the trial data used in this study does show a considerable response to ToU pricing that varies between 5% and 10% for constraint management events. In this project we focus on the drivers of response rather than affect on peak demand per se. Previous work on this also provides some insight. In a meta-analysis of 30 major trials implemented in the US and Europe, the authors find that response levels to economic incentives, like variable tariffs, are strongly influenced by household characteristics such as appliance stock, family structures cultural factors.[23] One example, an Irish study with 4,200 participants ToU tariff smart meter trial found that peak demand in trials were significantly related to number of bedrooms, dwelling type, household members, income, water heating and cooking fuels and appliances.[24]</p>
+
+	<br>
+
+	<br>
+
+	<h3 class="red_txt bold_txt">Our Approach</h3>
+
+	<h4 class="red_txt bold_txt">Data Acquisition</h4>
+
+	<p>The data to train our models comes from the Low Carbon London project run by UK Power Networks and consists of smart meter data with a temporal resolution of 30-minute intervals. Alongside the smart meter data there was also survey data collected during the trial covering households characteristics, appliance use and attitudes to energy use and the environment.</p>
+
+	<p>A total of 5,012 houses took part in the trial, 1,044 were on dynamic ToU tariffs whilst the remaining 4,068 acted as a control group using a fixed tariff. The trial was run between 2011 and 2014, however, only a small number of households collected smart meter data for the entire period, with many only joining the project partway through. To ensure that the features generated for each household related to the same time period, a subset of the data was taken covering the whole of 2013, 98% of the participants had a full year of data for this period.</p>
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Feature Generation/Extraction and Engineering</h4>
+
+	<p>Using the raw smart meter data as inputs for a machine learning model would create two main issues, firstly with over 17,000 data points for each household the calculations would be highly computationally expensive, furthermore there would be more features than samples which could lead to overfitting of the statistical models. To avoid these problem features were extracted from the data through a number of methods including principal component analysis (PCA) and clustering.</p>
+
+	<p>For each household on the ToU trial four different measures of consumption response were created. Firstly, response was measured as the average consumption at high and low tariffs in comparison to the mid-level tariff. This created a measure of change (delta) at high and low tariffs. This was then combined as high delta minus low delta to give the combined DSR. Lastly this combined response was used to rank all households.</p>
+
+	<p>Other consumption metrics not directly related to DSR were also calculated such as ‘variance in weekday peak usage’ and ‘mean lunchtime usage’. For this purpose, a bespoke feature extraction framework was created that allows automation of the process across different projects. This is made up of four steps: </p>
+
+	<ol>
+
+	    <li>Filter the data based on a defined variable such as ‘lunchtime’</li>
+
+	    <li>Group the remaining data based on a temporal feature like time of day or day of the year</li>
+
+	    <li>Extract a feature for each of these groups e.g. average consumption</li>
+
+	    <li>Reduces series of features to a single one by taking the maximum, minimum, mean or variance for each household. </li>
+
+	</ol>
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Optimisation through Scaling, Sampling & Selection</h4>
+
+	<p>Some of the algorithms used in this work base their methods on the Euclidean distance between features. As variables such as ‘total variance’ and ‘day/night ratio’ have very different magnitudes the meaning of the Euclidean distance quickly becomes irrelevant. In order to get around this we scale the data in two steps, first the mean of a feature is deducted from all of its values, followed by dividing each of the values by the mean, leaving the z-score of each data point.</p>
+
+	<p>The second option, resampling, is also particularly effective in improving classification models where there is a sampling imbalance – in this case this is a roughly 1 to 4 (high response to low response). The simplest resampling is random copy with replacement (over-sampling) and random removal without replacement (under-sampling). The other over-sampling technique used in this work was SMOTE, which creates synthetic data. This is a popular technique but it can sometimes struggle with high dimensional feature spaces. The Near Miss algorithm was also used for under-sampling, in which the data points is removed based on the number of its neighbours who belong to the same class.</p>
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Clustering</h4>
+
+	<p>A number of unsupervised clustering techniques (k-means, spectral clustering and Gaussian mixture models) were tested with the aim of achieving dimensionality reduction. The k-means algorithm is a hard-clustering method where the user specifies the number of clusters.  It works by randomly initialising cluster centroids and assigning data points to each based on Euclidean distance, recalculating centroids then repeating until distortion is minimised. </p>
+
+	<p>Gaussian Mixture Models can be conceptualised as a soft version of k-means that allows for classification of clusters that have overlap or do not have a shape that allows discrimination based on Euclidean distance alone. The models work by fitting k gaussian distributions with their own mean and variance parameters. A probability that each data point belongs to each distribution is calculated representing the clustering. </p>
+
+	<p>Spectral clustering uses spectral graph partitioning, in three main steps. First by creating a matrix representation of the graph, then by performing an Eigen decomposition of this matrix and mapping each point to its lower dimension, and finally it assigns groups to clusters based on this new representation. Coordinates of the Eigen decomposition are used in the last step with k-means to create the clustering (Von Luxburg, 2007).</p>
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Testing and Tuning of Machine Learning Models </h4>
+
+	<p>Two types of machine learning task were investigated in this work. The first is the prediction of a continuous variable, the absolute mean value of kWh change in response to the ToU tariffs. The second was to identify the top 25% of DSR households through a classification approach. </p> 
+
+	<p>Five models are explored in this paper, two of which are variants on the others but adapted for classification. Cross validation is deployed to avoid overfitting. Linear regression was used in the regression task. In order to enhance the prediction accuracy penalised (lasso) regression was used because of working with a large number of features. Logistic regression was used in the classification approach.</p>
+
+	<p>Random forests decision trees were used for both the regression and classification tasks. They are an ensemble method which combines a number of decision trees which ‘vote’ on the prediction of the dependant variable, in classification the mode class is taken and in regression the mean is calculated. The individual decision trees are made up of nodes, each of which split the dataset based on a single variable, determined by the information gain it brings.</p>
+
+	<p>For the classification problem Support Vector Machines (SVM) were also investigated. SVMs determine the optimum hyperplane which separates the classes, these decision boundaries are calculated with a transformed version of the dataset which is mapped into a higher dimensional space through the use of a kernel. One of SVM’s strengths is that it is able to find the optimum decision boundary rather than falling into local minima, that can be a problem with random forests or neural nets.</p>
+
+	<br>
+
+	<br>
+
+	<h3 class="red_txt bold_txt">Results</h3>
+
+	<h4 class="red_txt bold_txt">EDA of Response & Feature Variables </h4>
+
+	<p>The combined DSR metric was used to rank each household. These were then plotted against the separate responses to low and high ToU tariffs, as can be seen in Figure XXX the households who responded highly to the low tariffs were also the ones who tended to respond highly to the more expensive tariff. Additionally the average consumption in each half hour period, and grouped by tariff, was plotted for all of the households. </p> 
+
+	<!-- Add in DSR ranking image -->
+
+	<p>Additionally the average consumption in each half hour period, and grouped by tariff, was plotted for all of the households. Based on these measures we found that the magnitude of response was greater for the low tariff than for the high tariff. </p>
+
+	<!-- Add in response distribution image -->
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Feature Clustering </h4>
+
+	<p>Because of the high number of categorical variables in the survey data the k-means algorithm didn’t perform particularly well and produced erratic behaviour. Spectral clustering and the gaussian mixture models (GMM) were more successful based on the behaviour of key parameters. Plotted against the combined DSR measure, these clusters showed some variation  and were investigated further in the modelling.</p>  
+
+	<!-- Add in clusters image -->
+
+	<p>The clusters derived from the survey data using spectral and GMM were tested against the combined DSR measure using a regression model to see if the clusters would be useful in predicting response. These simple regression models tested produced poor results, adjusted R2 of 0.0248 for the spectral clusters and 0.08889 for GMM. Cluster 4 from the spectral clustering did however have a significant coefficient (p<0.01) with reference to cluster 1, as did cluster 5 from GMM (p<0.05. Binary memberships of these clusters were used as another variable in later modelling.</p>
+
+	<p>Clustering was also performed on the consumption data (mean and variance at each 30 minute timeslot). This also produced some promising results. The results of this clustering produced distinctive load profiles that can be seen in figure xx on the following page. Plotted against other consumption metrics these clusters tend to scale with overall consumption, but not the response variables.</p>
+
+	<!-- Add in variance in peak usage image -->
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Modelling Response to Time-of-Use tariff </h4>
+
+	<h5 class="red_txt bold_txt">Investigation of Sampling Techniques</h5>
+
+	<p>Using unmodified hyper-parameters, each of the classification models were trained using data created through the different sampling techniques described in section 2.3. For the random forest and SVM a random under-sampling technique proved most fruitful, followed by Near Miss 1 for the random forest and Near Miss 3 for the SVM. Logistic regression performed best using Near Miss 3 but had far lower f-scores than random forest and SVM. For the remainder of this work random undersampling was used in the models. </p>  
+
+	<p>SMOTE consistently under-performed relative to the other techniques, one possible cause may be the high dimensionality of the of the dataset which could create issues in the synthesis of artificial data for the minority group. This hypothesis is backed up by the models f-scores which were more than twice as high for the majority group relative to the minority one. </p>
+
+	<br>
+
+	<h5 class="red_txt bold_txt">Ordinary Least Squares and Penalised Regression</h5>
+
+	<p>In order to choose features to include for modelling of DSR lasso regression was performed on all variables in the survey data. Those where coefficients weren’t reduced to zero were included in standard ordinary least squares regression. Having tested some models with just the survey questions as independent variables, others from the consumption data set were added on the basis of their importance from initial random forest analysis. Cross validation was performed on the models test. Performance of the models was generally fairly poor in terms of adjusted R-squared. The best performing (model 5) was a combination of features from the consumption and survey data achieving an adjusted R-squared value of 0.223. </p>
+
+	<p>In order to improve model performance response was grouped into top quartile of households by response. A binomial logistic regression model was tested with this as the dependent variable achieving a pseudo R-squared score (McFadden) of 0.145. It should be noted however that pseudo R-squared scores have a tendency to score models artificially too high or low.</p>  
+
+	<!-- Add in table -->
+
+	<br>
+
+	<h5 class="red_txt bold_txt">Single Decision Trees</h5>
+
+	<p>Decision trees created with just survey data as the independent variables produced poor precision and recall (see Appendix). When the consumption data was added there was a notable improvement achieving 71% precision for the high response group (top 25%) and recall of 99% for the low response group (remaining 75%). </p>
+
+	<p>Whilst the decision tree with only survey data didn’t offer great performance in terms of precision and recall, it does allow some interpretation of what household characteristics provide more explanatory power. The first three variables that the data is split on are the number of tumble driers, portable electric heaters and electric ovens suggesting that households with a tumble drier or more than one electric heater or oven are likely to have higher propensity to respond to tariffs. </p>
+
+	<br>
+
+	<h5 class="red_txt bold_txt">Neural Network</h5>
+
+	<p>Models using neural network had similar selection of variables as regression model. The first neural network which included solely independent variable from survey data had 2 hidden layers with 5 and 3 nodes respectively. This model gave poor precision and recall, especially when predicting least responsive groups.</p>  
+
+	<p>Then the second model added the 15 most important variables generated from consumption data, and had 4 hidden layers with 14, 8, 5 and 1 nodes on each layer.</p>
+
+	<p>The second model still did not give any valid prediction, but at least the results for most responsive group and least responsive group were equally terrible. Although neural network models are not directly interpretable, possible reasons may include smaller training data than the size neural network usually requires. Besides, we would expect improvement with better designed network architecture and number of nodes. </p>
+
+	<br>
+
+	<h5 class="red_txt bold_txt">Random Forest</h5>
+
+	<p>The random forest was run using different combinations of the feature subsets, the most predictive combination was found to be the mean values for each half hour in conjunction with the survey data. Unsurprisingly the random forest was an improvement over the single decision trees, but also the logistic regression and neural net. The model was also run using a varying number of total decision trees. The high response group’s f-score was fairly constant but the low response group’s score rose as the forest size grew, plateauing at around 10,000 trees.</p>  
+
+	<br>
+
+	<h5 class="red_txt bold_txt">Support Vector Machines</h5>
+
+	<p>A similar process was used for the SVMs as with the random forest, starting with identifying the most predictive combination of features. For the SVM this was found to be the survey data, mean half hour data and clustering groups of the half hour mean and variance values. 4 types of kernel were explored, ‘linear’, ‘polynomial’, ‘sigmoid’ and ‘rbf’. The radial based function (‘rbf’) was found to have the better fit across all combinations of features. The kernel coefficient, gamma, defines the spread of the decision region. The optimal value for gamma was found to be 0.06.</p>
+
+	<!-- Add in table -->
+
+	<br>
+
+	<br>
+
+	<h3 class="red_txt bold_txt">Headline Findings, Applications and Future Work</h3>
+
+	<h4 class="red_txt bold_txt">Data Acquisition</h4>
+
+	<p>Response to Time-of-Use Tariffs</p>
+
+	<p>One of the key takeaways from the analysis was that the households who took part in the trial were responsive to the ToU tariffs, with mean change in consumption during low tariff periods ranging from -0.0473 to 0.315 kWh (mean 0.0268) and from -0.209 to 0.203 kWh for high tariff periods (mean -0.0108).</p> 
+
+	<p>The asymmetry between the response to high and low prices has two likely explanations. The behavioural economics concept of prospect theory has shown that when given a choice between losing or gaining something of equal economic value they assign greater personal value to the lost product, this is also called loss aversion, in the case of the trial greater value is assigned to the energy they already consume which they are averse to giving up during the periods of high prices. The second possible explanation is that the occupants are simply unable/unwilling to shift consumption during times of high demand (prices).</p>
+
+	<p>One of the conclusions that can be drawn from this is that even though ToU tariffs are helpful in smoothening out daily load profiles, an unintended consequence may be that they actually lead to greater overall energy consumption. This can be minimized through effective structuring of ToU tariffs, to this end further work should be carried out into how consumers respond to different levels of high and low tariffs.</p> 
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Predicting Demand Side Response</h4>
+
+	<p>The predictive models that were tested through cross validation, produced accuracy that would be high enough for deployment by utilities looking to target high DSR groups.  The models tested included: ordinary least squares regression, lasso regression, decision tree, random forest, support vector machines and neural networks. The highest performance in terms of f1-scores was through the use of a random forest method, however this was marginal and in the specific problem of an advertising campaign targeting high DSR households the SVM model would be more useful as it had a higher recall for the minority group and higher precision for the low respondent households. For future analysis one the key suggestions are that further work is done in the feature selection step as one of the issues in the models was the sheer number of variable they were dealing with. In addition, ensemble methods using random forest and SVM may produce better results.</p>
+
+	<p>Whilst not all models provided great accuracy, they were able to offer insight into which features had the most power in terms of predicting response. For example, decision trees based just on the survey data were primarily split on whether the household had a tumble dryer and portable electric heaters. Reassuringly, these are features that you might expect to influence a households ability to respond to the tariffs. This finding is confirmed by results from the qualitative element of the survey as reported in ref. 6. That shows it was for tumble dryers that respondents were more frequently able to shift their use. In addition, timers on tumble dryers were reported as being used most frequently out of those appliances with timers. Unlike in ref 5 and 24 there was no relationship found with the number of occupants.</p> 
+
+	<br>
+
+	<h4 class="red_txt bold_txt">Application</h4>
+
+	<p>It is thought that the techniques used in this work can be applied to a wide range of tasks relating to the analysis of smart meter data, such as identifying consumers in fuel poverty or predicting customer churn rates.</p>
+
+	<p>Through analysis of a range of machine learning models and data preparation techniques it was shown that households with a high response to a ToU tariff could be predicted with reasonable accuracy using a combination of smart meter time series data and survey data. The model with the greatest use, in a theoretical campaign by a utility company aiming to identify the high response households, was found to be a support vector machine using an rbf kernel and a gamma value of 0.06.</p> 
+
+	<p>The most important features in the models were identified as the use of tumble driers and electric heaters, as well as the variance in consumption. The survey elements which were identified could be used as questions during the initial sign up of a customer to a new utility company who already ask a number of questions relating to energy use.</p>
+</div>
+{% endblock %}	
