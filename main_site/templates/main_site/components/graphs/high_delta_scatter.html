@@ -1,0 +1,92 @@
+{% load staticfiles %}
+
+{% block content %}
+
+{% block jquery %}
+<script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js">
+    var endpoint = '/api/chart/highDeltaScatter/'
+    var defaultData = []
+    var labels = []
+
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data){
+            data_set = data
+            //console.log("Hello")
+            setHighDeltaChart()
+        },
+        error: function(error_data){
+            console.log("Error")
+            console.log(error_data)
+        },
+    })
+
+    function setHighDeltaChart() {
+        var ctx = document.getElementById("highDeltaChart");
+        var highDeltaChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Response to High ToU Tariff',
+                    data: data_set,
+                    pointBackgroundColor: 'rgba(255, 0, 0, 0.6)'
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Response to High Tariff (kWh)'
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            min: -0.15,
+                            max: 0.05,
+                            step: 0.04,
+                            callbacks: {
+                                lower_y: function(tick) {
+                                    return tick !== -0.15 ? tick : '';
+                                },
+                                upper_y: function(tick) {
+                                    return tick !== 0.05 ? tick : '';
+                                }
+                            }
+
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            max: 1100,
+                            callback: function(tick) {
+                                return tick !== 1100 ? tick : '';
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += tooltipItem.yLabel.toFixed(3);
+                            return label;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+</script>
+{% endblock jquery%}  
+
+{% endblock content%}	

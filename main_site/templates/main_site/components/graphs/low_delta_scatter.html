@@ -1,0 +1,91 @@
+{% load staticfiles %}
+
+{% block content %}
+
+{% block jquery %}
+<script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js">
+    var endpoint = '/api/chart/lowDeltaScatter/'
+    var defaultData = []
+    var labels = []
+
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data){
+            data_set = data
+            //console.log("Hello")
+            setlowDeltaChart()
+        },
+        error: function(error_data){
+            console.log("Error")
+            console.log(error_data)
+        },
+    })
+
+    function setlowDeltaChart() {
+        var ctx = document.getElementById("lowDeltaChart");
+        var lowDeltaChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Response to Low ToU Tariff',
+                    data: data_set,
+                    pointBackgroundColor: 'rgba(50, 205, 50, 0.6)'
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Response to Low Tariff (kWh)'
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            display:true,
+                            max: 0.2,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Change in half hourly consumption (kWh)'
+                            },
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            max: 1100,
+                            stepSize:500,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'DSR Rank'
+                            },
+                            callback: function(tick) {
+                                return tick !== 1100 ? tick : '';
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += tooltipItem.yLabel.toFixed(3);
+                            return label;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+</script>
+{% endblock jquery%}  
+
+{% endblock content%}	

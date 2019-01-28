@@ -19,7 +19,7 @@
           <a class="nav-link" href="/case_study">Case Studies</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/contact">Contact Us</a>
+          <a class="nav-link" href="/data">Data</a>
         </li>
       </ul>
     </div>
@@ -60,6 +60,20 @@
       <p>Our collaboration with Tatooine Energy has included the design of their new Time-of-Use tariff aimed at displacing energy consumption away from peak times. Central to this has been the identification of households who are most likely to respond to the tariffs, we've achieved this through analysis of their historical smart meter data.</p>
 
       <p>Find out more in our latest <a href="/case_study">case study</a>.</p>
+      
+      <br>
+
+      <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="lowDeltaChart" width="400" height="400"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="highDeltaChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -89,5 +103,8 @@
 </footer>
 
 {% include 'main_site/components/js.html' %}
+
+{% include 'main_site/components/graphs/low_delta_scatter.html' %} 
+{% include 'main_site/components/graphs/high_delta_scatter.html' %} 
 
 {% endblock %}	

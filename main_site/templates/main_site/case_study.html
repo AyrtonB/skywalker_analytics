@@ -19,7 +19,7 @@
           <a class="nav-link" href="/case_study">Case Studies</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/contact">Contact Us</a>
+          <a class="nav-link" href="/data">Data</a>
         </li>
       </ul>
     </div>
@@ -41,8 +41,9 @@
   </div>
 </header>
 
-{% include 'main_site/components/case_study.html' %}
-
+<body>
+  {% include 'main_site/components/case_study.html' %}
+</body>
 
 
 <!-- Footer -->
@@ -67,5 +68,8 @@
 </footer>
 
 {% include 'main_site/components/js.html' %}
+
+{% include 'main_site/components/graphs/low_delta_scatter.html' %} 
+{% include 'main_site/components/graphs/high_delta_scatter.html' %} 
 
 {% endblock %}	

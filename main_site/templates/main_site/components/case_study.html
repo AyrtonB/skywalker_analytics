@@ -1,4 +1,7 @@
 {% block content %}
+
+{% load staticfiles %}
+
 <div class="container">
 	<h3 class="red_txt bold_txt">About the Project</h3>
 
@@ -88,13 +91,48 @@
 
 	<h4 class="red_txt bold_txt">EDA of Response & Feature Variables </h4>
 
-	<p>The combined DSR metric was used to rank each household. These were then plotted against the separate responses to low and high ToU tariffs, as can be seen in Figure XXX the households who responded highly to the low tariffs were also the ones who tended to respond highly to the more expensive tariff. Additionally the average consumption in each half hour period, and grouped by tariff, was plotted for all of the households. </p> 
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-4">
+				<canvas id="lowDeltaChart" width="400" height="400"></canvas>
+			</div>
+			<div class="col-md-4">
+				<canvas id="highDeltaChart" width="400" height="400"></canvas>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
 
-	<!-- Add in DSR ranking image -->
+	<p>The combined DSR metric was used to rank each household. These were then plotted against the separate responses to low and high ToU tariffs, the households who responded highly to the low tariffs were also the ones who tended to respond highly to the more expensive tariff. Additionally the average consumption in each half hour period, and grouped by tariff, was plotted for all of the households. </p> 
+	 
+	<!-- 
+		<p style="text-align: center;">Caption</p> 
+		<div class='tableauPlaceholder' id='viz1548684766870' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeltaDensitychart&#47;Density&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeltaDensitychart&#47;Density' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeltaDensitychart&#47;Density&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1548684766870');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='520px';vizElement.style.height='460px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+
+	-->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-3">
+				<div class='tableauPlaceholder' id='viz1548684845169' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ta&#47;Tariff&#47;TariffDB&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Tariff&#47;TariffDB' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ta&#47;Tariff&#47;TariffDB&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1548684845169');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='620px';vizElement.style.height='360px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
 
 	<p>Additionally the average consumption in each half hour period, and grouped by tariff, was plotted for all of the households. Based on these measures we found that the magnitude of response was greater for the low tariff than for the high tariff. </p>
 
-	<!-- Add in response distribution image -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-3">
+				<div class='tableauPlaceholder' id='viz1548684766870' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeltaDensitychart&#47;Density&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeltaDensitychart&#47;Density' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeltaDensitychart&#47;Density&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1548684766870');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='520px';vizElement.style.height='460px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
 
 	<br>
 
@@ -102,14 +140,31 @@
 
 	<p>Because of the high number of categorical variables in the survey data the k-means algorithm didn’t perform particularly well and produced erratic behaviour. Spectral clustering and the gaussian mixture models (GMM) were more successful based on the behaviour of key parameters. Plotted against the combined DSR measure, these clusters showed some variation  and were investigated further in the modelling.</p>  
 
-	<!-- Add in clusters image -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-3">
+				<div class='tableauPlaceholder' id='viz1548685779439' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Cl&#47;Clusterboxplot&#47;Clusterboxes&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Clusterboxplot&#47;Clusterboxes' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Cl&#47;Clusterboxplot&#47;Clusterboxes&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1548685779439');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='680px';vizElement.style.height='487px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
+
+	<br>
 
 	<p>The clusters derived from the survey data using spectral and GMM were tested against the combined DSR measure using a regression model to see if the clusters would be useful in predicting response. These simple regression models tested produced poor results, adjusted R2 of 0.0248 for the spectral clusters and 0.08889 for GMM. Cluster 4 from the spectral clustering did however have a significant coefficient (p<0.01) with reference to cluster 1, as did cluster 5 from GMM (p<0.05. Binary memberships of these clusters were used as another variable in later modelling.</p>
 
-	<p>Clustering was also performed on the consumption data (mean and variance at each 30 minute timeslot). This also produced some promising results. The results of this clustering produced distinctive load profiles that can be seen in figure xx on the following page. Plotted against other consumption metrics these clusters tend to scale with overall consumption, but not the response variables.</p>
+	<p>Clustering was also performed on the consumption data (mean and variance at each 30 minute timeslot). This also produced some promising results. The results of this clustering produced distinctive load profiles that can be seen below. Plotted against other consumption metrics these clusters tend to scale with overall consumption, but not the response variables.</p>
 
-	<!-- Add in variance in peak usage image -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+					<div class='tableauPlaceholder' id='viz1548685844409' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;k-&#47;k-meansclustering_1&#47;K-meansclusters&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='k-meansclustering_1&#47;K-meansclusters' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;k-&#47;k-meansclustering_1&#47;K-meansclusters&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1548685844409');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1020px';vizElement.style.height='527px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+			</div>
+		</div>
+	</div>
 
+	<br>
 	<br>
 
 	<h4 class="red_txt bold_txt">Modelling Response to Time-of-Use tariff </h4>
@@ -134,17 +189,20 @@
 
 	<h5 class="red_txt bold_txt">Single Decision Trees</h5>
 
-	<p>Decision trees created with just survey data as the independent variables produced poor precision and recall (see Appendix). When the consumption data was added there was a notable improvement achieving 71% precision for the high response group (top 25%) and recall of 99% for the low response group (remaining 75%). </p>
+	<p>Decision trees created with just survey data as the independent variables produced poor precision and recall. When the consumption data was added there was a notable improvement achieving 71% precision for the high response group (top 25%) and recall of 99% for the low response group (remaining 75%). </p>
 
 	<p>Whilst the decision tree with only survey data didn’t offer great performance in terms of precision and recall, it does allow some interpretation of what household characteristics provide more explanatory power. The first three variables that the data is split on are the number of tumble driers, portable electric heaters and electric ovens suggesting that households with a tumble drier or more than one electric heater or oven are likely to have higher propensity to respond to tariffs. </p>
+
+	<div class=" container text-center">
+		<img src="{% static 'main_site/img/random_forest.png' %}"  width="1000" class="img-article" alt="Responsive image">
+	</div>
+
 
 	<br>
 
 	<h5 class="red_txt bold_txt">Neural Network</h5>
 
-	<p>Models using neural network had similar selection of variables as regression model. The first neural network which included solely independent variable from survey data had 2 hidden layers with 5 and 3 nodes respectively. This model gave poor precision and recall, especially when predicting least responsive groups.</p>  
-
-	<p>Then the second model added the 15 most important variables generated from consumption data, and had 4 hidden layers with 14, 8, 5 and 1 nodes on each layer.</p>
+	<p>Models using neural network had similar selection of variables as regression model. The first neural network which included solely independent variable from survey data had 2 hidden layers with 5 and 3 nodes respectively. This model gave poor precision and recall, especially when predicting least responsive groups. Then the second model added the 15 most important variables generated from consumption data, and had 4 hidden layers with 14, 8, 5 and 1 nodes on each layer.</p>
 
 	<p>The second model still did not give any valid prediction, but at least the results for most responsive group and least responsive group were equally terrible. Although neural network models are not directly interpretable, possible reasons may include smaller training data than the size neural network usually requires. Besides, we would expect improvement with better designed network architecture and number of nodes. </p>
 
@@ -160,7 +218,15 @@
 
 	<p>A similar process was used for the SVMs as with the random forest, starting with identifying the most predictive combination of features. For the SVM this was found to be the survey data, mean half hour data and clustering groups of the half hour mean and variance values. 4 types of kernel were explored, ‘linear’, ‘polynomial’, ‘sigmoid’ and ‘rbf’. The radial based function (‘rbf’) was found to have the better fit across all combinations of features. The kernel coefficient, gamma, defines the spread of the decision region. The optimal value for gamma was found to be 0.06.</p>
 
-	<!-- Add in table -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-3">
+					<div class='tableauPlaceholder' id='viz1548688816728' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ga&#47;Gamma_1&#47;GammaDB&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Gamma_1&#47;GammaDB' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ga&#47;Gamma_1&#47;GammaDB&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1548688816728');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='620px';vizElement.style.height='460px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
 
 	<br>
 
@@ -168,9 +234,7 @@
 
 	<h3 class="red_txt bold_txt">Headline Findings, Applications and Future Work</h3>
 
-	<h4 class="red_txt bold_txt">Data Acquisition</h4>
-
-	<p>Response to Time-of-Use Tariffs</p>
+	<h4 class="red_txt bold_txt">Response to Time-of-Use Tariffs</h4>
 
 	<p>One of the key takeaways from the analysis was that the households who took part in the trial were responsive to the ToU tariffs, with mean change in consumption during low tariff periods ranging from -0.0473 to 0.315 kWh (mean 0.0268) and from -0.209 to 0.203 kWh for high tariff periods (mean -0.0108).</p> 
 
