@@ -50,7 +50,7 @@ class lowDeltaChartData(APIView):
 		return JsonResponse(data, safe=False)
 
 def get_household_data(request, *args, **kwargs):
-	json_filepath = os.path.join(BASE_DIR, 'static\main_site\data\household_features.json') #os.path.abspath(os.path.dirname(__name__))
+	json_filepath = '/static/main_site/data/household_features.json' #os.path.join(BASE_DIR, 'static\main_site\data\household_features.json') #os.path.abspath(os.path.dirname(__name__))
 	json_data = open(json_filepath).read()
 	data = json.loads(json_data)
 
