@@ -1,0 +1,1 @@
+web: gunicorn skywalker_analytics.wsgi
