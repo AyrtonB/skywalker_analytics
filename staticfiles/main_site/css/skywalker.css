@@ -38,22 +38,6 @@
 .white_bkgd {
   background-color: "#ffffff"; }
 
-.energy_bkgd {
-  background-size: cover;
-  background-image: url("../img/energy_cover.png"); }
-
-.testimonial_bkgd {
-  background-size: cover;
-  background-image: url("../img/water_grey.jpg") !important; }
-
-.rig_bkgd {
-  background-size: cover;
-  background-image: url("../img/rig_grey_cropped.jpg") !important; }
-
-.wind_bkgd {
-  background-size: cover;
-  background-image: url("../img/wind_grey_cropped.jpg") !important;}
-
 .white_txt {
   color: #ffffff  !important; }
 
